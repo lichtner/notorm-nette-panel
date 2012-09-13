@@ -1,0 +1,13 @@
+{
+	"name": "lichtner/notorm-nette-panel",
+	"description": "NotORM panel for Nette framework for debugging",
+	"keywords": ["notorm", "nette", "debugger"],
+	"homepage": "http://github.com/lichtner/notorm-nette-panel",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Marek Lichtner",
+			"homepage": "http://licht.sk"
+		}
+	]
+}
