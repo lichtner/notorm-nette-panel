@@ -11,6 +11,6 @@
 		}
 	],
 	"autoload": {
-		"files": ["NotORMPanel.php"]
+		"classmap": ["NotORMPanel.php"]
 	}
 }
