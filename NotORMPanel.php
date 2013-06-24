@@ -38,7 +38,9 @@ class NotORMPanel implements IBarPanel {
 	 *
 	 * @return void
 	 */
-	public function __construct() {}
+	public function __construct() {
+		self::$_instance = $this;
+	}
 
 	/**
 	 * Enforce singleton. Disallow cloning.
