@@ -1,24 +1,28 @@
 <style>
-	#nette-debug-notorm table { width:100% }
-	#nette-debug #nette-debug-notorm a { color:#333;background:transparent }
+
+
+	#nette-debug .nette-inner#nette-debug-notorm table tr td:first-child { width:600px }
+	#nette-debug .nette-inner#nette-debug-notorm table tr td:first-child+td { width:200px }
 	#nette-debug-notorm pre.nette-dump span { color:#c16549 }
-	#nette-debug-notorm td.notorm-sql { background: #fff }
+
+
 	#nette-debug-notorm .nette-alt td.notorm-sql { background: #f5f5f5 }
 </style>
 
 <h1>Queries: <?php echo count($queries); ?></h1>
 
-<div class="nette-inner">
+<div class="nette-inner" id="nette-debug-notorm">
 	<table>
 		<tr>
-			<th>SQL Statement</th><th>Params</th>
+			<th>SQL Statement</th>
+			<th>Params</th>
 		</tr>
 
 		<?php if (count($queries) > 0): ?>
 
 			<?php foreach ($queries as $query): ?>
 				<tr<?php if ($i++ % 2 == 0): ?> class="nette-alt"<?php endif ?>>
-					<td class="notorm-sql"><code><?php echo self::dump($query['sql']) ?></code></td>
+					<td class="notorm-sql"><?php echo self::dump($query['sql']) ?></td>
 					<td><?php dump($query['params']) ?></td>
 				</tr>
 			<?php endforeach; ?>

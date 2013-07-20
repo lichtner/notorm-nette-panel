@@ -15,7 +15,7 @@ use Nette\Utils\Strings;
 class NotORMPanel implements IBarPanel
 {
 	/** @var NotORMPanel singleton instance */
-	private static $_instance = null;
+	private static $_instance = NULL;
 
 	/** @var array */
 	private $queries = array();
@@ -44,7 +44,7 @@ class NotORMPanel implements IBarPanel
 	 */
 	public static function getInstance()
 	{
-		if (null === self::$_instance) {
+		if (NULL === self::$_instance) {
 			self::$_instance = new self();
 		}
 
@@ -106,12 +106,14 @@ class NotORMPanel implements IBarPanel
 	{
 		$keywords1 = 'CREATE\s+TABLE|CREATE(?:\s+UNIQUE)?\s+INDEX|SELECT|UPDATE|INSERT(?:\s+INTO)?|REPLACE(?:\s+INTO)?|DELETE|FROM|WHERE|HAVING|GROUP\s+BY|ORDER\s+BY|LIMIT|SET|VALUES|LEFT\s+JOIN|INNER\s+JOIN|TRUNCATE';
 		$keywords2 = 'ALL|DISTINCT|DISTINCTROW|AS|USING|ON|AND|OR|IN|IS|NOT|NULL|LIKE|TRUE|FALSE|INTEGER|CLOB|VARCHAR|DATETIME|TIME|DATE|INT|SMALLINT|BIGINT|BOOL|BOOLEAN|DECIMAL|FLOAT|TEXT|VARCHAR|DEFAULT|AUTOINCREMENT|PRIMARY\s+KEY';
+		$keywords3 = 'LEFT JOIN|WHERE|ORDER BY|LIMIT';
 
 		// insert new lines
 		$sql = " $sql ";
 		$sql = Strings::replace($sql, "#(?<=[\\s,(])($keywords1)(?=[\\s,)])#", "\n\$1");
-		if (strpos($sql, "CREATE TABLE") !== FALSE)
+		if (strpos($sql, "CREATE TABLE") !== FALSE) {
 			$sql = Strings::replace($sql, "#,\s+#i", ", \n");
+		}
 
 		// reduce spaces
 		$sql = Strings::replace($sql, '#[ \t]{2,}#', " ");
@@ -123,23 +125,32 @@ class NotORMPanel implements IBarPanel
 
 		// syntax highlight
 		$sql = Strings::replace($sql, "#(/\\*.+?\\*/)|(\\*\\*.+?\\*\\*)|(?<=[\\s,(])($keywords1)(?=[\\s,)])|(?<=[\\s,(=])($keywords2)(?=[\\s,)=])#s", function ($matches) {
-				if (!empty($matches[1])) // comment
+				if (!empty($matches[1])) { // comment
 					return '<em style="color:gray">' . $matches[1] . '</em>';
+				}
 
-				if (!empty($matches[2])) // error
+				if (!empty($matches[2])) { // error
 					return '<strong style="color:red">' . $matches[2] . '</strong>';
+				}
 
-				if (!empty($matches[3])) // most important keywords
+				if (!empty($matches[3])) { // most important keywords
 					return '<strong style="color:blue">' . $matches[3] . '</strong>';
+				}
 
-				if (!empty($matches[4])) // other keywords
+				if (!empty($matches[4])) { // other keywords
 					return '<strong style="color:green">' . $matches[4] . '</strong>';
+				}
 			}
 		);
 
+		// styling
+		$sql = Strings::replace($sql, "~<strong style=\"color:blue\">($keywords3)<\/strong>~i", function ($m) {
+			return '<br>' . $m[0];
+		});
+
 		$sql = trim($sql);
 
-		return '<pre class="dump">' . $sql . "</pre>\n";
+		return '<code class="dump">' . $sql . "</code>\n";
 	}
 
 }
