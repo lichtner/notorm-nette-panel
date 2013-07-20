@@ -14,27 +14,11 @@ use Nette\Utils\Strings;
  */
 class NotORMPanel implements IBarPanel
 {
-
 	/** @var NotORMPanel singleton instance */
 	private static $_instance = null;
 
 	/** @var array */
 	private $queries = array();
-
-	/** @var string */
-	private $platform;
-
-
-	public function getPlatform()
-	{
-		return $this->platform;
-	}
-
-
-	public function setPlatform($platform)
-	{
-		$this->platform = $platform;
-	}
 
 
 	/**
@@ -96,7 +80,6 @@ class NotORMPanel implements IBarPanel
 		}
 
 		$i = 0;
-		$platform = $this->platform;
 		$queries = $this->queries;
 
 		ob_start();
