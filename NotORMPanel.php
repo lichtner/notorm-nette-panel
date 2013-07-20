@@ -1,7 +1,8 @@
 <?php
 
-use Nette\Utils\Strings,
-	Nette\Diagnostics\IBarPanel;
+use Nette\Diagnostics\IBarPanel;
+use Nette\Utils\Strings;
+
 
 /**
  * @author Štěpán Svoboda
@@ -9,52 +10,56 @@ use Nette\Utils\Strings,
  * @author Patrik Votoček
  * @author Igor Hlina
  * @author Marek Lichtner
+ * @author Tomáš Votruba
  */
-class NotORMPanel implements IBarPanel {
+class NotORMPanel implements IBarPanel
+{
 
 	/** @var NotORMPanel singleton instance */
 	private static $_instance = null;
 
 	/** @var array */
 	private $queries = array();
-	// <editor-fold defaultstate="collapsed" desc="$platform">
-	/**
-	 * @var string
-	 */
-	private $platform = '';
 
-	public function getPlatform() {
+	/** @var string */
+	private $platform;
+
+
+	public function getPlatform()
+	{
 		return $this->platform;
 	}
 
-	public function setPlatform($platform) {
+
+	public function setPlatform($platform)
+	{
 		$this->platform = $platform;
 	}
 
-	// </editor-fold>
 
 	/**
 	 * Instantiate using {@link getInstance()}; NotORMPanel is a singleton object.
-	 *
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		self::$_instance = $this;
 	}
 
+
 	/**
 	 * Enforce singleton. Disallow cloning.
-	 *
 	 * @return void
 	 */
 	private function __clone() {}
 
+
 	/**
-	 * Create singleton instance
-	 *
+	 * Create singleton instance.
 	 * @return NotORMPanel
 	 */
-	public static function getInstance() {
+	public static function getInstance()
+	{
 		if (null === self::$_instance) {
 			self::$_instance = new self();
 		}
@@ -62,21 +67,30 @@ class NotORMPanel implements IBarPanel {
 		return self::$_instance;
 	}
 
-	public function getId() {
+
+	/**
+	 * @return string
+	 */
+	public function getId()
+	{
 		return 'NotORM';
 	}
+
 
 	/**
 	 * @return string HTML code for Debugbar
 	 */
-	public function getTab() {
+	public function getTab()
+	{
 		return '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAHpJREFUOMvVU8ENgDAIBON8dgY7yU3SHTohfoQUi7FGH3pJEwI9oBwl+j1YDRGR8AIzA+hiAIxLsoOW1R3zB9Cks1VKmaQWXz3wHWEJpBbilF3wivxKB9OdiUfDnJ6Q3RNGyWp3MraytbKqjADkrIvhPYgSDG3itz/TBsqre3ItA1W8AAAAAElFTkSuQmCC">' . count($this->queries) . ' queries';
 	}
+
 
 	/**
 	 * @return string HTML code for Debugbar detail
 	 */
-	public function getPanel() {
+	public function getPanel()
+	{
 		if (count($this->queries) == 0) {
 			return NULL;
 		}
@@ -90,11 +104,23 @@ class NotORMPanel implements IBarPanel {
 		return ob_get_clean();
 	}
 
-	public function logQuery($sql, array $params = NULL) {
+
+	/**
+	 * @param  string
+	 * @param  array
+	 */
+	public function logQuery($sql, array $params = NULL)
+	{
 		$this->queries[] = array('sql' => $sql, 'params' => $params);
 	}
 
-	public static function dump($sql) {
+
+	/**
+	 * @param string
+	 * @return string
+	 */
+	public static function dump($sql)
+	{
 		$keywords1 = 'CREATE\s+TABLE|CREATE(?:\s+UNIQUE)?\s+INDEX|SELECT|UPDATE|INSERT(?:\s+INTO)?|REPLACE(?:\s+INTO)?|DELETE|FROM|WHERE|HAVING|GROUP\s+BY|ORDER\s+BY|LIMIT|SET|VALUES|LEFT\s+JOIN|INNER\s+JOIN|TRUNCATE';
 		$keywords2 = 'ALL|DISTINCT|DISTINCTROW|AS|USING|ON|AND|OR|IN|IS|NOT|NULL|LIKE|TRUE|FALSE|INTEGER|CLOB|VARCHAR|DATETIME|TIME|DATE|INT|SMALLINT|BIGINT|BOOL|BOOLEAN|DECIMAL|FLOAT|TEXT|VARCHAR|DEFAULT|AUTOINCREMENT|PRIMARY\s+KEY';
 
@@ -127,7 +153,9 @@ class NotORMPanel implements IBarPanel {
 					return '<strong style="color:green">' . $matches[4] . '</strong>';
 			}
 		);
+
 		$sql = trim($sql);
+
 		return '<pre class="dump">' . $sql . "</pre>\n";
 	}
 
